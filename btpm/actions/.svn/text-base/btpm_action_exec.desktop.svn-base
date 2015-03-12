@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=Btpm plugin that executes a command
+Encoding=UTF-8
+Icon=
+InitialPreference=0
+Name=Btpm command execution plugin
+ServiceTypes=BtpmActionPlugin
+Type=Service
+X-KDE-Library=btpm_action_exec

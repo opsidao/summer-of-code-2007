@@ -1,0 +1,577 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>815</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>KBlueMon</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <item row="0" column="0" >
+     <widget class="QTableWidget" name="remoteListWidget" >
+      <property name="enabled" >
+       <bool>true</bool>
+      </property>
+      <property name="toolTip" >
+       <string>Click an entry to view it's properties</string>
+      </property>
+      <property name="whatsThis" >
+       <string>This table lists the remote devices that has been discovered</string>
+      </property>
+      <property name="editTriggers" >
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="tabKeyNavigation" >
+       <bool>false</bool>
+      </property>
+      <property name="selectionMode" >
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior" >
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="gridStyle" >
+       <enum>Qt::DashDotLine</enum>
+      </property>
+      <column>
+       <property name="text" >
+        <string>Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Signal</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Class</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Address</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Paired</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item row="0" column="1" >
+     <widget class="QDockWidget" name="deviceProperties" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="layoutDirection" >
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="features" >
+       <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetVerticalTitleBar|QDockWidget::NoDockWidgetFeatures</set>
+      </property>
+      <property name="windowTitle" >
+       <string>Device properties</string>
+      </property>
+      <widget class="QWidget" name="dockWidgetContents" >
+       <layout class="QGridLayout" >
+        <item row="0" column="0" >
+         <widget class="QToolBox" name="toolBox" >
+          <widget class="QWidget" name="infoPage" >
+           <property name="geometry" >
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>362</width>
+             <height>349</height>
+            </rect>
+           </property>
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <attribute name="label" >
+            <string>Properties</string>
+           </attribute>
+           <layout class="QGridLayout" >
+            <item row="0" column="0" >
+             <widget class="QLabel" name="textLabel1" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Address of the remote device</string>
+              </property>
+              <property name="text" >
+               <string>Address:</string>
+              </property>
+              <property name="scaledContents" >
+               <bool>false</bool>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_address</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_address" >
+              <property name="toolTip" >
+               <string>Address of the remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" >
+             <widget class="QLabel" name="textLabel4" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Name of the remote device</string>
+              </property>
+              <property name="text" >
+               <string>Name:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_name</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_name" >
+              <property name="toolTip" >
+               <string>Name of the remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" >
+             <widget class="QLabel" name="label" >
+              <property name="text" >
+               <string>Alias:</string>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_alias</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" >
+             <widget class="QLineEdit" name="dev_alias" >
+              <property name="palette" >
+               <palette>
+                <active>
+                 <colorrole role="Base" >
+                  <brush brushstyle="SolidPattern" >
+                   <color alpha="255" >
+                    <red>237</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </active>
+                <inactive>
+                 <colorrole role="Base" >
+                  <brush brushstyle="SolidPattern" >
+                   <color alpha="255" >
+                    <red>237</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </inactive>
+                <disabled>
+                 <colorrole role="Base" >
+                  <brush brushstyle="SolidPattern" >
+                   <color alpha="255" >
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </disabled>
+               </palette>
+              </property>
+              <property name="toolTip" >
+               <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">You can set a local alias for this remote device&lt;/p>
+&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Insert your new alias and hit enter to set it&lt;/p>&lt;/body>&lt;/html></string>
+              </property>
+              <property name="readOnly" >
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2" >
+             <widget class="QPushButton" name="updateAliasButton" >
+              <property name="text" >
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" >
+             <widget class="QLabel" name="textLabel3" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Signal strength for the remote device</string>
+              </property>
+              <property name="text" >
+               <string>Signal:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_strength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_strength" >
+              <property name="toolTip" >
+               <string>Signal strength for the remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" >
+             <widget class="QLabel" name="textLabel6_2" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Bluetooth version of the remote device</string>
+              </property>
+              <property name="text" >
+               <string>Version:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_version</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_version" >
+              <property name="toolTip" >
+               <string>Bluetooth version of the remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" >
+             <widget class="QLabel" name="textLabel7_2" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Revision of the remote device</string>
+              </property>
+              <property name="text" >
+               <string>Revision:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_revision</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_revision" >
+              <property name="toolTip" >
+               <string>Revision of the remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0" >
+             <widget class="QLabel" name="textLabel8_2" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Remote device vendor and company</string>
+              </property>
+              <property name="text" >
+               <string>Manufacturer:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_manufacturer</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_manufacturer" >
+              <property name="toolTip" >
+               <string>Remote device vendor and company</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0" >
+             <widget class="QLabel" name="textLabel16_2" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip" >
+               <string>Kind of remote device</string>
+              </property>
+              <property name="text" >
+               <string>Category:</string>
+              </property>
+              <property name="wordWrap" >
+               <bool>false</bool>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_category</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_category" >
+              <property name="toolTip" >
+               <string>Kind of remote device</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0" >
+             <widget class="QLabel" name="label_2" >
+              <property name="toolTip" >
+               <string>Last time this remote device has been seen, in GMT.</string>
+              </property>
+              <property name="text" >
+               <string>Last seen...</string>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_lastseen</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_lastseen" >
+              <property name="toolTip" >
+               <string>Last time this remote device has been seen, in GMT.</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0" >
+             <widget class="QLabel" name="label_3" >
+              <property name="toolTip" >
+               <string>Last time this remote device has been used, in GMT.</string>
+              </property>
+              <property name="text" >
+               <string>Last used</string>
+              </property>
+              <property name="buddy" >
+               <cstring>dev_lastused</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1" colspan="2" >
+             <widget class="QLineEdit" name="dev_lastused" >
+              <property name="toolTip" >
+               <string>Last time this remote device has been used, in GMT.</string>
+              </property>
+              <property name="readOnly" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="servicePage" >
+           <property name="geometry" >
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>96</width>
+             <height>34</height>
+            </rect>
+           </property>
+           <attribute name="label" >
+            <string>Services</string>
+           </attribute>
+           <layout class="QGridLayout" >
+            <item row="0" column="0" >
+             <widget class="QFrame" name="frame" >
+              <property name="frameShape" >
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" >
+               <item row="0" column="0" >
+                <widget class="QTreeWidget" name="service_tree" >
+                 <column>
+                  <property name="text" >
+                   <string>Name</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2" >
+     <layout class="QHBoxLayout" >
+      <item>
+       <layout class="QHBoxLayout" >
+        <item>
+         <widget class="QPushButton" name="okButton" >
+          <property name="toolTip" >
+           <string>Click to close</string>
+          </property>
+          <property name="whatsThis" >
+           <string>Terminates execution of KBlueMon</string>
+          </property>
+          <property name="text" >
+           <string>OK</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="feedBackBar" >
+        <property name="toolTip" >
+         <string>This bar indicates if service discovery is running</string>
+        </property>
+        <property name="whatsThis" >
+         <string>If this bar is animated, then service discovery is running. If the bar is quiet, service discovery is not running.</string>
+        </property>
+        <property name="invertedAppearance" >
+         <bool>false</bool>
+        </property>
+        <property name="format" >
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>815</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuConfiguration" >
+    <property name="title" >
+     <string>&amp;Options</string>
+    </property>
+    <addaction name="action_Local_devices" />
+   </widget>
+   <addaction name="menuConfiguration" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="action_Local_devices" >
+   <property name="text" >
+    <string>&amp;Local devices</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>okButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>52</x>
+     <y>547</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>814</x>
+     <y>544</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

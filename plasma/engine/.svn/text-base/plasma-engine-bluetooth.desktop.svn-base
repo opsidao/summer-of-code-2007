@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Bluetooth Data Engine
+Name[es]=Motor de datos bluetooth
+ServiceTypes=Plasma/DataEngine
+Type=Service
+Icon=package-network
+X-KDE-Library=plasma_engine_bluetooth
+X-EngineName=bluetooth

@@ -1,0 +1,1784 @@
+Index: control/backends/fakebluetooth/fakebluetoothinterface.h
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothinterface.h	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothinterface.h	(revisión: 702581)
+@@ -54,7 +54,7 @@
+ 
+     QString address() const
+     {
+-        kDebug() << k_funcinfo << endl; return mAddress;
++        kDebug() << k_funcinfo; return mAddress;
+     }
+     QString version() const
+     {
+Index: control/backends/fakebluetooth/fakebluetoothsecurity.cpp
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothsecurity.cpp	(revisión: 0)
++++ control/backends/fakebluetooth/fakebluetoothsecurity.cpp	(revisión: 702581)
+@@ -0,0 +1,36 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++*/
++#include "fakebluetoothsecurity.h"
++
++void FakeBluetoothSecurity::addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    Q_UNUSED(agent)
++}
++
++void FakeBluetoothSecurity::removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    Q_UNUSED(agent)
++}
++
++void FakeBluetoothSecurity::setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent * agent)
++{
++    Q_UNUSED(agent)
++}
++
++#include "fakebluetoothsecurity.moc"
+Index: control/backends/fakebluetooth/fakebluetoothmanager.cpp
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothmanager.cpp	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothmanager.cpp	(revisión: 702581)
+@@ -28,7 +28,7 @@
+ 
+ FakeBluetoothManager::FakeBluetoothManager(QObject * parent, const QStringList &) : Solid::Control::Ifaces::BluetoothManager(parent)
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+ 
+     mXmlFile = KStandardDirs::locate("data", "solidfakebackend/fakebluetooth.xml");
+ 
+@@ -39,10 +39,10 @@
+ 
+ FakeBluetoothManager::FakeBluetoothManager(QObject * parent, const QStringList &, const QString &xmlFile) : Solid::Control::Ifaces::BluetoothManager(parent)
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+     mXmlFile = xmlFile;
+     if (mXmlFile.isEmpty()) {
+-        kDebug() << "Falling back to installed bluetoothing xml" << endl;
++        kDebug() << "Falling back to installed bluetoothing xml";
+         mXmlFile = KStandardDirs::locate("data", "solidfakebackend/fakebluetooth.xml");
+     }
+     parseBluetoothFile();
+@@ -79,7 +79,7 @@
+ {
+     QFile machineFile(mXmlFile);
+     if (!machineFile.open(QIODevice::ReadOnly)) {
+-        kDebug() << k_funcinfo << "Error while opening " << mXmlFile << endl;
++        kDebug() << k_funcinfo << "Error while opening " << mXmlFile;
+         return;
+     }
+ 
+@@ -94,7 +94,7 @@
+     }
+     machineFile.close();
+ 
+-    kDebug() << k_funcinfo << "Parsing fake computer XML: " << mXmlFile << endl;
++    kDebug() << k_funcinfo << "Parsing fake computer XML: " << mXmlFile;
+     QDomElement mainElement = fakeDocument.documentElement();
+     QDomNode node = mainElement.firstChild();
+     while (!node.isNull()) {
+@@ -117,37 +117,37 @@
+     QMap<QString, QVariant> propertyMap;
+     QString ubi = deviceElement.attribute("ubi");
+     propertyMap.insert("ubi", ubi);
+-    kDebug() << k_funcinfo << "Listing device: " << ubi << endl;
++    kDebug() << k_funcinfo << "Listing device: " << ubi;
+     propertyMap.insert("ubi", QVariant(ubi));
+ 
+     QDomNode childNode = deviceElement.firstChild();
+     while (!childNode.isNull()) {
+         QDomElement childElement = childNode.toElement();
+-        //kDebug() << "found child=" << childElement.tagName() << endl;
++        //kDebug() << "found child=" << childElement.tagName();
+         if (!childElement.isNull() && childElement.tagName() == QLatin1String("property")) {
+             QString propertyKey;
+             QVariant propertyValue;
+ 
+             propertyKey = childElement.attribute("key");
+             propertyValue = QVariant(childElement.text());
+-            //    kDebug() << "Got property key=" << propertyKey << ", value=" << propertyValue.toString() << endl;
++            //    kDebug() << "Got property key=" << propertyKey << ", value=" << propertyValue.toString();
+             propertyMap.insert(propertyKey, propertyValue);
+         } else if (!childElement.isNull() && childElement.tagName() == QLatin1String("device")) {
+             QString ubi = childElement.attribute("ubi");
+-            kDebug() << k_funcinfo << "Listing properties: " << ubi << endl;
++            kDebug() << k_funcinfo << "Listing properties: " << ubi;
+             FakeBluetoothRemoteDevice * remoteDevice = new FakeBluetoothRemoteDevice(parseBluetoothElement(childElement));
+             mBluetoothRemoteDevices.insert(ubi, remoteDevice);
+         }
+         childNode = childNode.nextSibling();
+     }
+-    //kDebug() << "Done listing. " << endl;
++    //kDebug() << "Done listing. ";
+ 
+-    kDebug() << k_funcinfo << "Creating FakeBluetoothInterface for " << ubi << endl;
++    kDebug() << k_funcinfo << "Creating FakeBluetoothInterface for " << ubi;
+     interface = new FakeBluetoothInterface(propertyMap);
+ 
+     // Inject Remote devices....
+     foreach (FakeBluetoothRemoteDevice *device, mBluetoothRemoteDevices) {
+-        kDebug() << "Injecting " << device->name() << endl;
++        kDebug() << "Injecting " << device->name();
+         interface->injectDevice(device->ubi(), device);
+     }
+ 
+@@ -172,7 +172,7 @@
+ 
+             propertyKey = propertyElement.attribute("key");
+             propertyValue = QVariant(propertyElement.text());
+-//            kDebug() << "Got property key=" << propertyKey << ", value=" << propertyValue.toString() << endl;
++//            kDebug() << "Got property key=" << propertyKey << ", value=" << propertyValue.toString();
+             propertyMap.insert(propertyKey, propertyValue);
+         }
+ 
+@@ -207,6 +207,10 @@
+     // TODO
+     return NULL;
+ }
++Solid::Control::Ifaces::BluetoothSecurity *FakeBluetoothManager::security(const QString &/*interface*/)
++{
++    return NULL;
++}
+ 
+ void FakeBluetoothManager::removeInputDevice(const QString  & /*ubi */)
+ {
+@@ -215,4 +219,3 @@
+ 
+ 
+ #include "fakebluetoothmanager.moc"
+-
+Index: control/backends/fakebluetooth/fakebluetoothremotedevice.cpp
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothremotedevice.cpp	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothremotedevice.cpp	(revisión: 702581)
+@@ -32,7 +32,7 @@
+ 
+     mUbi = mPropertyMap["ubi"].toString();
+ 
+-    kDebug() << "UBI: " << mUbi << endl;
++    kDebug() << "UBI: " << mUbi;
+ 
+     mAddress = mPropertyMap["address"].toString();
+     mConnected = mPropertyMap["connected"].toBool();
+Index: control/backends/fakebluetooth/fakebluetoothsecurity.h
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothsecurity.h	(revisión: 0)
++++ control/backends/fakebluetooth/fakebluetoothsecurity.h	(revisión: 702581)
+@@ -0,0 +1,35 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++#ifndef __FAKE_BLUETOOTH_SECURITY__
++#define __FAKE_BLUETOOTH_SECURITY__
++
++#include <solid/control/ifaces/bluetoothsecurity.h>
++#include <solid/control/bluetoothsecurity.h>
++
++class KDE_EXPORT FakeBluetoothSecurity : public Solid::Control::Ifaces::BluetoothSecurity
++{
++    Q_OBJECT
++    public Q_SLOTS:
++        void addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent *agent);
++};
++
++#endif
+Index: control/backends/fakebluetooth/CMakeLists.txt
+===================================================================
+--- control/backends/fakebluetooth/CMakeLists.txt	(revisión: 694428)
++++ control/backends/fakebluetooth/CMakeLists.txt	(revisión: 702581)
+@@ -8,6 +8,7 @@
+    fakebluetoothmanager.cpp
+    fakebluetoothremotedevice.cpp
+    fakebluetoothinputdevice.cpp
++   fakebluetoothsecurity.cpp
+ )
+ 
+ 
+Index: control/backends/fakebluetooth/fakebluetoothinputdevice.cpp
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothinputdevice.cpp	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothinputdevice.cpp	(revisión: 702581)
+@@ -30,7 +30,7 @@
+ 
+     mUbi = mPropertyMap["ubi"].toString();
+ 
+-    kDebug() << "UBI: " << mUbi << endl;
++    kDebug() << "UBI: " << mUbi;
+ 
+     mAddress = mPropertyMap["address"].toString();
+     mConnected = mPropertyMap["connected"].toBool();
+Index: control/backends/fakebluetooth/fakebluetoothmanager.h
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothmanager.h	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothmanager.h	(revisión: 702581)
+@@ -29,6 +29,7 @@
+ #include <solid/control/ifaces/bluetoothmanager.h>
+ #include "fakebluetoothinterface.h"
+ #include "fakebluetoothinputdevice.h"
++#include "fakebluetoothsecurity.h"
+ 
+ class QDomElement;
+ 
+@@ -47,7 +48,7 @@
+     QStringList bluetoothInputDevices() const;
+     FakeBluetoothInputDevice *createBluetoothInputDevice(const QString &ubi);
+     KJob *setupInputDevice(const QString &ubi);
+-
++    Solid::Control::Ifaces::BluetoothSecurity * security(const QString &interface);
+ public Q_SLOTS:
+     void removeInputDevice(const QString  & ubi);
+ 
+Index: control/backends/fakebluetooth/fakebluetoothinterface.cpp
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothinterface.cpp	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothinterface.cpp	(revisión: 702581)
+@@ -55,7 +55,7 @@
+ FakeBluetoothInterface::~FakeBluetoothInterface()
+ {
+     foreach (FakeBluetoothRemoteDevice *device, mBluetoothRemoteDevices) {
+-        kDebug() << "DEVICE: " << device->ubi() << endl;
++        kDebug() << "DEVICE: " << device->ubi();
+         delete device;
+     }
+ 
+@@ -65,23 +65,23 @@
+ QObject * FakeBluetoothInterface::createBluetoothRemoteDevice(const QString  & ubi)
+ {
+     if (mBluetoothRemoteDevices.contains(ubi)) {
+-        kDebug() << k_funcinfo << "found " << ubi << endl;
++        kDebug() << k_funcinfo << "found " << ubi;
+         return mBluetoothRemoteDevices[ubi];
+     } else {
+-        kDebug() << k_funcinfo << "NOT found " << ubi << endl;
++        kDebug() << k_funcinfo << "NOT found " << ubi;
+         return 0;
+     }
+ }
+ 
+ QStringList FakeBluetoothInterface::bluetoothRemoteDevices() const
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+     return mBluetoothRemoteDevices.keys();
+ }
+ 
+ void FakeBluetoothInterface::discoverDevices()
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+     QTimer::singleShot(1000, this,
+                        SIGNAL(remoteDeviceFound(QString("/org/kde/solid/fakebluetooth/hci0/EE:EE:EE:EE:EE:EE"),
+                                                 0, 99)));
+Index: control/backends/fakebluetooth/fakebluetoothremotedevice.h
+===================================================================
+--- control/backends/fakebluetooth/fakebluetoothremotedevice.h	(revisión: 694428)
++++ control/backends/fakebluetooth/fakebluetoothremotedevice.h	(revisión: 702581)
+@@ -166,7 +166,10 @@
+     void bondingCreated();
+     void bondingRemoved();
+     void serviceRecordXmlAvailable(const QString &ubi, const QString &record);
++    void serviceRecordXmlFailed(const QString &ubi);
+     void serviceHandlesAvailable(const QString &ubi, const QList<uint> &handles);
++    void serviceHandlesFailed(const QString &ubi);
++    
+ protected:
+     QMap<QString, QVariant> mPropertyMap;
+ 
+Index: control/solid/control/bluetoothmanager.cpp
+===================================================================
+--- control/solid/control/bluetoothmanager.cpp	(revisión: 694428)
++++ control/solid/control/bluetoothmanager.cpp	(revisión: 702581)
+@@ -27,13 +27,17 @@
+ #include "ifaces/bluetoothmanager.h"
+ #include "ifaces/bluetoothinterface.h"
+ #include "ifaces/bluetoothinputdevice.h"
++#include "ifaces/bluetoothsecurity.h"
+ 
+ #include "../soliddefs_p.h"
+ #include "managerbase_p.h"
+ 
+ #include "bluetoothinterface.h"
+ #include "bluetoothmanager.h"
++#include "bluetoothsecurity.h"
+ 
++#include <kdebug.h>
++
+ namespace Solid
+ {
+ namespace Control
+@@ -187,6 +191,17 @@
+     return list;
+ }
+ 
++Solid::Control::BluetoothSecurity *Solid::Control::BluetoothManager::security(const QString &interface)
++{
++    Ifaces::BluetoothManager *backendManager = qobject_cast<Ifaces::BluetoothManager*>(d->managerBackend());
++    if(backendManager!=0)
++    {
++        Ifaces::BluetoothSecurity *backendSecurity = backendManager->security(interface);
++        return new Solid::Control::BluetoothSecurity(backendSecurity);
++    }
++    return 0;
++}
++
+ void Solid::Control::BluetoothManager::removeInputDevice(const QString &ubi)
+ {
+     SOLID_CALL(Ifaces::BluetoothManager *, d->managerBackend(), removeInputDevice(ubi));
+@@ -335,4 +350,5 @@
+     }
+ }
+ 
++
+ #include "bluetoothmanager.moc"
+Index: control/solid/control/ifaces/bluetoothmanager.cpp
+===================================================================
+--- control/solid/control/ifaces/bluetoothmanager.cpp	(revisión: 694428)
++++ control/solid/control/ifaces/bluetoothmanager.cpp	(revisión: 702581)
+@@ -20,6 +20,7 @@
+ */
+ 
+ #include "bluetoothmanager.h"
++#include "bluetoothsecurity.h"
+ 
+ Solid::Control::Ifaces::BluetoothManager::BluetoothManager(QObject * parent) : QObject(parent)
+ {}
+Index: control/solid/control/ifaces/bluetoothsecurity.h
+===================================================================
+--- control/solid/control/ifaces/bluetoothsecurity.h	(revisión: 0)
++++ control/solid/control/ifaces/bluetoothsecurity.h	(revisión: 702581)
+@@ -0,0 +1,74 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2007 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++
++#ifndef SOLID_IFACES_BLUETOOTHSECURITY_H
++#define SOLID_IFACES_BLUETOOTHSECURITY_H
++
++#include <solid/control/solid_control_export.h>
++#include <solid/control/bluetoothsecurity.h> // So we know about Solid::Control::BluetoothPassKeyAgent
++
++#include <QObject>
++
++namespace Solid
++{
++namespace Control
++{
++namespace Ifaces
++{
++/**
++ * Represents a bluetooth interface as seen by the bluetooth subsystem.
++ */
++class SOLIDCONTROLIFACES_EXPORT BluetoothSecurity : public QObject
++{
++    Q_OBJECT
++public:
++    /**
++     * Create a BluetoothSecurity object for all Bluetooth Interfaces.
++     *
++     * @param parent the parent object
++     */
++    BluetoothSecurity(QObject *parent = 0);
++
++    /**
++     * Create a BluetoothSecurity object for a certain Bluetooth Interfaces.
++     *
++     * @param interface the ubi of a certain Bluetooth Interface
++     * @param parent the parent object
++     */
++    BluetoothSecurity(const QString &interface, QObject *parent = 0);
++
++    /**
++     * Destructs a BluetoothSecurity object.
++     */
++    virtual ~BluetoothSecurity();
++public Q_SLOTS:
++    virtual void addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent) = 0;
++    virtual void removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent) = 0;
++    virtual void setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent *agent) = 0;
++};
++} //Ifaces
++} //Control
++} //Solid
++
++Q_DECLARE_INTERFACE(Solid::Control::Ifaces::BluetoothSecurity, "org.kde.Solid.Ifaces.BluetoothSecurity/0.1")
++
++#endif
++
+Index: control/solid/control/ifaces/bluetoothmanager.h
+===================================================================
+--- control/solid/control/ifaces/bluetoothmanager.h	(revisión: 694428)
++++ control/solid/control/ifaces/bluetoothmanager.h	(revisión: 702581)
+@@ -33,6 +33,7 @@
+ {
+ namespace Ifaces
+ {
++class BluetoothSecurity;
+ /**
+  * This class specifies the interface a backend will have to implement in
+  * order to be used in the system.
+@@ -102,8 +103,12 @@
+      * @returns job handling of the operation.
+      */
+     virtual KJob *setupInputDevice(const QString &ubi) = 0;
++    
++    /**
++     * Gets an instance of BluetoothSecurity to handle pairing/authorization requests
++     */
++    virtual Solid::Control::Ifaces::BluetoothSecurity* security(const QString &interface) = 0;
+ 
+-
+ public Q_SLOTS:
+     /**
+      * Remove the configuraiton of a bluetooth input device.
+Index: control/solid/control/ifaces/bluetoothremotedevice.h
+===================================================================
+--- control/solid/control/ifaces/bluetoothremotedevice.h	(revisión: 694428)
++++ control/solid/control/ifaces/bluetoothremotedevice.h	(revisión: 702581)
+@@ -300,9 +300,19 @@
+      */
+     virtual void serviceRecordXmlAvailable(const QString &ubi, const QString &record) = 0;
+     /**
++     * Notifies that a search for service handles failed
++     * @param ubi of the remote device that caused the failure
++     */
++    virtual void serviceHandlesFailed(const QString &ubi) = 0;
++    /**
+      * Search for service handles is done
+      */
+     virtual void serviceHandlesAvailable(const QString &ubi, const QList<uint> &handles) = 0;
++    /**
++     * Notifies that a request for an XML record for the given device failed
++     * @param ubi of the remote device that caused the failure
++     */
++    virtual void serviceRecordXmlFailed(const QString &ubi) = 0;
+ };
+ 
+ } // Ifaces
+Index: control/solid/control/ifaces/bluetoothsecurity.cpp
+===================================================================
+--- control/solid/control/ifaces/bluetoothsecurity.cpp	(revisión: 0)
++++ control/solid/control/ifaces/bluetoothsecurity.cpp	(revisión: 702581)
+@@ -0,0 +1,38 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2006 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++
++#include "bluetoothsecurity.h"
++
++Solid::Control::Ifaces::BluetoothSecurity::BluetoothSecurity(QObject *parent)
++        : QObject(parent)
++{}
++
++Solid::Control::Ifaces::BluetoothSecurity::BluetoothSecurity(const QString & interface, QObject * parent)
++    : QObject(parent)
++{
++    Q_UNUSED(interface)
++}
++
++Solid::Control::Ifaces::BluetoothSecurity::~BluetoothSecurity()
++{}
++
++
++#include "bluetoothsecurity.moc"
+Index: control/solid/control/bluetoothinterface.h
+===================================================================
+--- control/solid/control/bluetoothinterface.h	(revisión: 694428)
++++ control/solid/control/bluetoothinterface.h	(revisión: 702581)
+@@ -105,6 +105,7 @@
+ 
+     /**
+      * Create new BluetoothRemoteDevice object from this interface given its UBI.
++     * This object will be auto deleted, DON'T delete it.
+      *
+      * @param ubi the identifier of the bluetooth device to instantiate
+      * @returns a bluetooth object, if a bluetooth device having the given UBI, for this interface exists, 0 otherwise
+Index: control/solid/control/bluetoothsecurity.h
+===================================================================
+--- control/solid/control/bluetoothsecurity.h	(revisión: 0)
++++ control/solid/control/bluetoothsecurity.h	(revisión: 702581)
+@@ -0,0 +1,131 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2006 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++
++#ifndef SOLID_BLUETOOTHSECURITY_H
++#define SOLID_BLUETOOTHSECURITY_H
++
++#include <QPair>
++
++#include <solid/control/singletondefs.h>
++#include <solid/control/solid_control_export.h>
++
++namespace Solid
++{
++namespace Control
++{
++    /**
++     * This is the interface a class must implement to act as a Passkey Agent.
++     * A class that acts as a PassKeyAgent will handle the process of pairing 
++     * (stablish a trusted connection) with a remote device.
++     */
++    class SOLIDCONTROL_EXPORT BluetoothPasskeyAgent : public QObject
++    {
++        Q_OBJECT
++        Q_PROPERTY(QString remote READ remote)
++        public:
++            /**
++             * Initializes the passkey agent
++             * @param parent pointer to the parent object for auto deletion
++             * @param remote address of the remote device for this agent in 00:00:00:00:00:00 format. If empty the agent will act as the default passkey agent for all devices.
++             */
++            BluetoothPasskeyAgent(QObject *parent = 0,const QString &remote="");
++            //FIXME This method shouldn't be virtual, but the linker complains (and halts) if it isn't
++            virtual QString remote();
++        public Q_SLOTS:
++            //TODO Add documentation
++            virtual QString requestPasskey(const QString &ubi, bool isNumeric);
++            virtual bool confirmPasskey(const QString &ubi, const QString &passkey);
++            virtual void displayPasskey(const QString &ubi, const QString &passkey);
++            virtual void keypress(const QString &ubi);
++            virtual void completedAuthentication(const QString &ubi);
++            virtual void cancelAuthentication(const QString &ubi);
++        private:
++            QString m_remote;
++    };
++    
++    /**
++     * This is the interface a class must implement to act as an Authorization Agent.
++     * An Authorization Agent handles requests to access local services from a remote
++     * device.
++     */
++    class SOLIDCONTROL_EXPORT BluetoothAuthorizationAgent: public QObject
++    {
++        Q_OBJECT
++        public:
++            BluetoothAuthorizationAgent(QObject *parent);
++        public Q_SLOTS:
++            virtual bool authorize(const QString &localUbi,const QString &remoteAddress,const QString& serviceUuid)=0;
++            virtual void cancel(const QString &localUbi,const QString &remoteAddress,const QString& serviceUuid)=0;
++    };
++    
++    class BluetoothSecurityPrivate;
++    /**
++     * Represents a bluetooth security interface which handles passkey request by the backend.
++     * To get an instance of this class use Solid::Control::BluetoothManager::security().
++     */
++    class SOLIDCONTROL_EXPORT BluetoothSecurity : public QObject
++    {
++    Q_OBJECT
++    public:
++        /**
++         * Constructs an invalid bluetooth security object 
++         */
++        BluetoothSecurity();
++
++        /**
++         * Constructs a new bluetooth security object taking its data from a backend.
++         *
++         * @param backendObject the object given by the backend
++         */
++        explicit BluetoothSecurity(QObject *backendObject);
++
++        /**
++         * Constructs a new bluetooth security object taking its data from a backend.
++         *
++         * @param backendObject the object given by the backend
++         */
++//         BluetoothSecurity(const QString&, QObject *backendObject);
++
++        /**
++         * Destroys the device.
++         */
++        ~BluetoothSecurity();
++
++        /**
++         * Assigns a bluetooth security object to this bluetooth security object and returns a reference to it.
++         *
++         * @param device the bluetooth security object to assign
++         * @return a reference to the bluetooth security object 
++                     */
++        BluetoothSecurity &operator=(const BluetoothSecurity &object);
++    public Q_SLOTS:
++        void addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent *agent);
++    private:
++        Q_PRIVATE_SLOT(d, void _k_destroyed(QObject *))
++
++        BluetoothSecurityPrivate * const d;
++    };
++} //Control
++} //Solid
++
++#endif
+Index: control/solid/control/managerbase.cpp
+===================================================================
+--- control/solid/control/managerbase.cpp	(revisión: 694428)
++++ control/solid/control/managerbase.cpp	(revisión: 702581)
+@@ -56,13 +56,13 @@
+ 
+         if(m_backend!=0) {
+             if (m_backend->inherits(backendClassName)) {
+-                kDebug() << "Backend loaded: " << ptr->name() << endl;
++                kDebug() << "Backend loaded: " << ptr->name();
+                 break;
+             } else {
+                 QString error_string = i18n("Backend loaded but wrong type obtained, expected %1",
+                                              backendClassName);
+ 
+-                kDebug() << "Error loading '" << ptr->name() << "': " << error_string << endl;
++                kDebug() << "Error loading '" << ptr->name() << "': " << error_string;
+                 error_msg.append(error_string);
+ 
+                 delete m_backend;
+@@ -70,7 +70,7 @@
+             }
+         } else {
+             QString error_string = KLibLoader::errorString(error);
+-            kDebug() << "Error loading '" << ptr->name() << "', KLibLoader said: " << error_string << endl;
++            kDebug() << "Error loading '" << ptr->name() << "', KLibLoader said: " << error_string;
+             error_msg.append(error_string);
+         }
+     }
+Index: control/solid/control/bluetoothmanager.h
+===================================================================
+--- control/solid/control/bluetoothmanager.h	(revisión: 694428)
++++ control/solid/control/bluetoothmanager.h	(revisión: 702581)
+@@ -43,6 +43,7 @@
+ }
+ 
+ class BluetoothInterface;
++class BluetoothSecurity;
+ 
+ typedef QList<BluetoothInterface> BluetoothInterfaceList;
+ typedef QList<BluetoothInputDevice> BluetoothInputDeviceList;
+@@ -117,6 +118,11 @@
+      * @returns the job handling of the operation.
+      */
+     KJob *setupInputDevice(const QString &ubi);
++    
++    /**
++     * Gets an instance of BluetoothSecurity to handle pairing/authorization requests
++     */
++    BluetoothSecurity *security(const QString &interface = QString());
+ 
+ public Q_SLOTS:
+     /**
+Index: control/solid/control/bluetoothremotedevice.h
+===================================================================
+--- control/solid/control/bluetoothremotedevice.h	(revisión: 694428)
++++ control/solid/control/bluetoothremotedevice.h	(revisión: 702581)
+@@ -327,9 +327,19 @@
+      */
+     void serviceHandlesAvailable(const QString &ubi, const QList<uint> &handles);
+     /**
++     * Notifies that a search for service handles failed
++     * @param ubi of the remote device that caused the failure
++     */
++    void serviceHandlesFailed(const QString &ubi);
++    /**
+      * A new service record is available
+      */
+     void serviceRecordXmlAvailable(const QString &ubi, const QString &record);
++    /**
++     * Notifies that a request for an XML record for the given device failed
++     * @param ubi of the remote device that caused the failure
++     */
++    void serviceRecordXmlFailed(const QString &ubi);
+ protected:
+     BluetoothRemoteDevicePrivate *d_ptr;
+ 
+Index: control/solid/control/bluetoothinterface.cpp
+===================================================================
+--- control/solid/control/bluetoothinterface.cpp	(revisión: 694428)
++++ control/solid/control/bluetoothinterface.cpp	(revisión: 702581)
+@@ -111,7 +111,13 @@
+         return d->invalidDevice;
+     }
+ }
++Solid::Control::BluetoothRemoteDevice * Solid::Control::BluetoothInterface::createBluetoothRemoteDevice(const QString & ubi)
++{
++    QPair<BluetoothRemoteDevice *, Ifaces::BluetoothRemoteDevice *> pair = d->findRegisteredBluetoothRemoteDevice(ubi);
++    return pair.first;
++}
+ 
++
+ QString Solid::Control::BluetoothInterface::address() const
+ {
+     return_SOLID_CALL(Ifaces::BluetoothInterface *, d->backendObject(), QString(), address());
+@@ -248,7 +254,7 @@
+ 
+ void Solid::Control::BluetoothInterface::discoverDevices()
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+     SOLID_CALL(Ifaces::BluetoothInterface *, d->backendObject(), discoverDevices());
+ }
+ 
+@@ -282,8 +288,8 @@
+     FrontendObjectPrivate::setBackendObject(object);
+ 
+     if (object) {
+-        QObject::connect(object, SIGNAL(modeChanged(const QString &)),
+-                         parent(), SIGNAL(modeChanged(const QString &)));
++        QObject::connect(object, SIGNAL(modeChanged(Solid::Control::BluetoothInterface::Mode)),
++                         parent(), SIGNAL(modeChanged(Solid::Control::BluetoothInterface::Mode)));
+         QObject::connect(object, SIGNAL(discoverableTimeoutChanged(int)),
+                          parent(), SIGNAL(discoverableTimeoutChanged(int)));
+         QObject::connect(object, SIGNAL(minorClassChanged(const QString &)),
+Index: control/solid/control/bluetoothsecurity.cpp
+===================================================================
+--- control/solid/control/bluetoothsecurity.cpp	(revisión: 0)
++++ control/solid/control/bluetoothsecurity.cpp	(revisión: 702581)
+@@ -0,0 +1,134 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2006 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++#include <QMetaMethod>
++
++#include <QMap>
++#include <QPair>
++#include <QStringList>
++
++#include "ifaces/bluetoothsecurity.h"
++
++#include "../soliddefs_p.h"
++
++#include "bluetoothmanager.h"
++#include "bluetoothsecurity.h"
++#include "bluetoothremotedevice.h"
++
++#include "frontendobject_p.h"
++#include "managerbase_p.h"
++
++namespace Solid
++{
++namespace Control
++{
++class BluetoothSecurityPrivate: public FrontendObjectPrivate
++{
++    public:
++        BluetoothSecurityPrivate(QObject *parent)
++            :FrontendObjectPrivate(parent){};
++        QList<BluetoothPasskeyAgent *> registeredAgents;
++};
++}
++}
++
++Solid::Control::BluetoothSecurity::BluetoothSecurity()
++:QObject(0),d(new BluetoothSecurityPrivate(this))
++{
++}
++
++Solid::Control::BluetoothSecurity::BluetoothSecurity(QObject *backendObject)
++    :QObject(backendObject),d(new BluetoothSecurityPrivate(this))
++{
++    d->setBackendObject(backendObject);
++}
++
++Solid::Control::BluetoothSecurity::~BluetoothSecurity()
++{
++}
++
++Solid::Control::BluetoothSecurity &Solid::Control::BluetoothSecurity::operator=(const Solid::Control::BluetoothSecurity & dev)
++{
++    if(dev.d)
++        d->setBackendObject(dev.d->backendObject());
++    return *this;
++}
++
++void Solid::Control::BluetoothSecurity::addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    SOLID_CALL(Solid::Control::Ifaces::BluetoothSecurity *,d->backendObject(),addPasskeyAgent(agent))
++}
++
++void Solid::Control::BluetoothSecurity::removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    SOLID_CALL(Solid::Control::Ifaces::BluetoothSecurity *,d->backendObject(),removePasskeyAgent(agent))
++}
++void Solid::Control::BluetoothSecurity::setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent * agent)
++{
++    SOLID_CALL(Solid::Control::Ifaces::BluetoothSecurity *,d->backendObject(),setAuthorizationAgent(agent))
++}
++/****************************** BluetoothPasskeyAgent implementation ******************************/
++Solid::Control::BluetoothPasskeyAgent::BluetoothPasskeyAgent(QObject * parent,const QString &interface)
++    :QObject(parent)
++{
++    //TODO Auto register all subclasses on BluetoothSecurity?
++}
++
++QString Solid::Control::BluetoothPasskeyAgent::remote()
++{
++    return m_remote;
++}
++
++QString Solid::Control::BluetoothPasskeyAgent::requestPasskey(const QString & ubi, bool isNumeric)
++{
++    Q_UNUSED(ubi)
++    Q_UNUSED(isNumeric)
++    return "";
++}
++
++bool Solid::Control::BluetoothPasskeyAgent::confirmPasskey(const QString & ubi, const QString & passkey)
++{
++    Q_UNUSED(ubi)
++    Q_UNUSED(passkey)
++    return false;
++}
++
++void Solid::Control::BluetoothPasskeyAgent::displayPasskey(const QString & ubi, const QString & passkey)
++{
++    Q_UNUSED(ubi)
++    Q_UNUSED(passkey)
++}
++
++void Solid::Control::BluetoothPasskeyAgent::keypress(const QString & ubi)
++{
++    Q_UNUSED(ubi)
++}
++
++void Solid::Control::BluetoothPasskeyAgent::completedAuthentication(const QString & ubi)
++{
++    Q_UNUSED(ubi)
++}
++
++void Solid::Control::BluetoothPasskeyAgent::cancelAuthentication(const QString & ubi)
++{
++    Q_UNUSED(ubi)
++}
++
++#include "bluetoothsecurity.moc"
+Index: bluez/bluez-bluetoothinterface.cpp
+===================================================================
+--- bluez/bluez-bluetoothinterface.cpp	(revisión: 694428)
++++ bluez/bluez-bluetoothinterface.cpp	(revisión: 702581)
+@@ -30,29 +30,29 @@
+ 
+ class BluezBluetoothInterfacePrivate
+ {
+-public:
+-    BluezBluetoothInterfacePrivate(const QString  & objPath)
+-            : iface("org.bluez",
+-                    objPath,
+-                    "org.bluez.Adapter",
+-                    QDBusConnection::systemBus()),
+-            objectPath(objPath)
+-    { }
+-    QDBusInterface iface;
+-    QString objectPath;
++    public:
++        BluezBluetoothInterfacePrivate(const QString  & objPath)
++    : iface("org.bluez",
++            objPath,
++            "org.bluez.Adapter",
++            QDBusConnection::systemBus()),
++        objectPath(objPath)
++        { }
++        QDBusInterface iface;
++        QString objectPath;
+ 
+-    QMap<QString, BluezBluetoothRemoteDevice *> devices;
++        QMap<QString, BluezBluetoothRemoteDevice *> devices;
+ };
+ 
+ BluezBluetoothInterface::BluezBluetoothInterface(const QString  & objectPath)
+-        : BluetoothInterface(0), d(new BluezBluetoothInterfacePrivate(objectPath))
++    : BluetoothInterface(0), d(new BluezBluetoothInterfacePrivate(objectPath))
+ {
+ 
+ #define connectInterfaceToThis(signal, slot) \
+     d->iface.connection().connect("org.bluez", \
+-                                   objectPath, \
+-                                   "org.bluez.Adapter", \
+-                                   signal, this, SLOT(slot));
++    objectPath, \
++    "org.bluez.Adapter", \
++    signal, this, SLOT(slot));
+ 
+     connectInterfaceToThis("ModeChanged", slotModeChanged(const QString &));
+     connectInterfaceToThis("DiscoverableTimeoutChanged", slotDiscoverableTimeoutChanged(int));
+@@ -119,9 +119,9 @@
+ 
+ int BluezBluetoothInterface::discoverableTimeout() const
+ {
+-    kDebug() << k_funcinfo << endl;
++    kDebug() << k_funcinfo;
+ 
+-    QDBusReply< int > timeout = d->iface.call("GetDiscoverableTimeout");
++    QDBusReply< uint > timeout = d->iface.call("GetDiscoverableTimeout");
+     if (timeout.isValid()) {
+         return timeout.value();
+     }
+@@ -136,7 +136,11 @@
+ 
+ QStringList BluezBluetoothInterface::listConnections() const
+ {
+-    return listReply("ListConnections");
++    QStringList list = listReply("ListConnections");
++    for(int i = 0 ; i < list.size(); i++)
++        list[i]=ubi()+"/"+list[i];
++    return list;
++	    
+ }
+ 
+ QString BluezBluetoothInterface::majorClass() const
+@@ -181,7 +185,10 @@
+ 
+ QStringList BluezBluetoothInterface::listRemoteDevices() const
+ {
+-    return listReply("ListRemoteDevces");
++    QStringList list = listReply("ListRemoteDevices");
++    for(int i = 0 ; i < list.size(); i++)
++        list[i]=ubi()+"/"+list[i];
++    return list;
+ }
+ 
+ QStringList BluezBluetoothInterface::listRecentRemoteDevices(const QDateTime &) const
+@@ -191,12 +198,25 @@
+ 
+ void BluezBluetoothInterface::setMode(const Solid::Control::BluetoothInterface::Mode mode)
+ {
+-    d->iface.call("SetMode", mode);
++    QString modeString;
++    switch(mode)
++    {
++        case Solid::Control::BluetoothInterface::Off:
++            modeString = "off";
++            break;
++        case Solid::Control::BluetoothInterface::Discoverable:
++            modeString = "discoverable";
++            break;
++        case Solid::Control::BluetoothInterface::Connectable:
++            modeString = "connectable";
++            break;
++    }
++    d->iface.call("SetMode", modeString);
+ }
+ 
+ void BluezBluetoothInterface::setDiscoverableTimeout(int timeout)
+ {
+-    d->iface.call("SetDiscoverableTimeout", timeout);
++    d->iface.call("SetDiscoverableTimeout", (uint)timeout);
+ }
+ 
+ void BluezBluetoothInterface::setMinorClass(const QString &minorClass)
+@@ -271,7 +291,7 @@
+ 
+ void BluezBluetoothInterface::slotRemoteDeviceFound(const QString &address, uint deviceClass, short rssi)
+ {
+-    kDebug() << k_funcinfo << "address: " << address << " class: " << deviceClass << " RSSI: " << rssi << endl;
++    kDebug() << k_funcinfo << "address: " << address << " class: " << deviceClass << " RSSI: " << rssi;
+ 
+     QString remoteubi = QString("%1/%2").arg(ubi()).arg(address);
+     emit remoteDeviceFound(remoteubi, deviceClass, rssi);
+@@ -279,7 +299,7 @@
+ 
+ void BluezBluetoothInterface::slotRemoteDeviceDisappeared(const QString &address)
+ {
+-    kDebug() << k_funcinfo << "address: " << address << endl;
++    kDebug() << k_funcinfo << "address: " << address;
+     QString remoteubi = QString("%1/%2").arg(ubi()).arg(address);
+     emit remoteDeviceDisappeared(remoteubi);
+ }
+Index: bluez/bluez-bluetoothsecurity.cpp
+===================================================================
+--- bluez/bluez-bluetoothsecurity.cpp	(revisión: 0)
++++ bluez/bluez-bluetoothsecurity.cpp	(revisión: 702581)
+@@ -0,0 +1,140 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++*/
++#include "bluez-bluetoothsecurity.h"
++#include <kdebug.h>
++
++/*********************** BluezBluetoothSecurity ***********************/
++BluezBluetoothSecurity::BluezBluetoothSecurity(QObject * parent)
++    :Solid::Control::Ifaces::BluetoothSecurity(parent),authAgent(0)
++{
++    kDebug() << k_funcinfo << endl; 
++}
++
++BluezBluetoothSecurity::BluezBluetoothSecurity(const QString & interface, QObject * parent)
++    :Solid::Control::Ifaces::BluetoothSecurity(interface,parent)
++{
++    kDebug() << k_funcinfo << " interface: " << interface << endl; 
++}
++
++BluezBluetoothSecurity::~ BluezBluetoothSecurity()
++{
++    kDebug() << k_funcinfo << endl; 
++}
++
++/*********************** methods from Solid::Control::BluetoothSecurity ***********************/
++void BluezBluetoothSecurity::addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    kDebug() << k_funcinfo << endl;
++    QString watched = agent->remote();
++    if(!watched.isEmpty() && !devicesWithAgent.contains(watched))
++        devicesWithAgent << watched;
++    agents << agent;
++}
++
++void BluezBluetoothSecurity::removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent * agent)
++{
++    kDebug() << k_funcinfo << endl; 
++}
++
++/**************************************************************************************/
++QString BluezBluetoothSecurity::request(const QString & address, bool numeric)
++{
++    QString out;
++    if(!agents.isEmpty())
++    {
++        Solid::Control::BluetoothPasskeyAgent *agent = 0;
++        if(devicesWithAgent.contains(address))
++        {
++            foreach(Solid::Control::BluetoothPasskeyAgent *a,agents)
++            {
++                if(a->remote() == address)
++                {
++                    agent = a;
++                    break;
++                }
++            }
++        } else
++            agent = agents[0];
++        Q_ASSERT(agent);
++        out = agent->requestPasskey(address,numeric);
++    }
++    return out;
++}
++
++bool BluezBluetoothSecurity::confirm(const QString & address, const QString & value)
++{
++    bool out;
++    if(!agents.isEmpty())
++    {
++        Solid::Control::BluetoothPasskeyAgent *agent = 0;
++        if(devicesWithAgent.contains(address))
++        {
++            foreach(Solid::Control::BluetoothPasskeyAgent *a,agents)
++            {
++                if(a->remote() == address)
++                {
++                    agent = a;
++                    break;
++                }
++            }
++        } else
++            agent = agents[0];
++        Q_ASSERT(agent);
++        out = agent->confirmPasskey(address,value);
++    }
++    return out;
++}
++
++void BluezBluetoothSecurity::display(const QString & address, const QString & value)
++{
++}
++
++void BluezBluetoothSecurity::complete(const QString & address)
++{
++}
++
++void BluezBluetoothSecurity::keypress(const QString & address)
++{
++}
++
++void BluezBluetoothSecurity::cancel(const QString & address)
++{
++}
++
++void BluezBluetoothSecurity::setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent * agent)
++{
++    if(authAgent)
++        delete authAgent;
++    authAgent = agent;
++}
++
++bool BluezBluetoothSecurity::authorize(const QString & localUbi, const QString & remoteAddress, const QString & serviceUuid)
++{
++    if(authAgent)
++        return authAgent->authorize(localUbi,remoteAddress,serviceUuid);
++    return false;
++}
++
++void BluezBluetoothSecurity::cancel(const QString & localUbi, const QString & remoteAddress, const QString & serviceUuid)
++{
++    if(authAgent)
++        authAgent->cancel(localUbi,remoteAddress,serviceUuid);
++}
++
++#include "bluez-bluetoothsecurity.moc"
+Index: bluez/bluez-bluetoothmanager.cpp
+===================================================================
+--- bluez/bluez-bluetoothmanager.cpp	(revisión: 694428)
++++ bluez/bluez-bluetoothmanager.cpp	(revisión: 702581)
+@@ -26,6 +26,8 @@
+ #include "bluez-bluetoothinterface.h"
+ #include "bluez-bluetoothinputdevice.h"
+ #include "bluez-bluetoothmanager.h"
++#include "bluez-bluetoothsecurity.h"
++#include "bluez-bluetoothsecurityadaptor.h"
+ #include "bluezcalljob.h"
+ 
+ class BluezBluetoothManagerPrivate
+@@ -185,5 +187,17 @@
+     emit inputDeviceRemoved(path);
+ }
+ 
++Solid::Control::Ifaces::BluetoothSecurity *BluezBluetoothManager::security(const QString &interface)
++{
++    BluezBluetoothSecurity *out;
++    if(interface.isEmpty())
++        out = new BluezBluetoothSecurity(this);
++    else
++        out = new BluezBluetoothSecurity(interface,this);
++    new BluezBluetoothSecurityAdaptor(out);
++    return out;
++}
+ 
+ #include "bluez-bluetoothmanager.moc"
++
++
+Index: bluez/bluez-bluetoothremotedevice.cpp
+===================================================================
+--- bluez/bluez-bluetoothremotedevice.cpp	(revisión: 694428)
++++ bluez/bluez-bluetoothremotedevice.cpp	(revisión: 702581)
+@@ -36,10 +36,11 @@
+ {
+ 
+     // size("/FF:FF:FF:FF:FF:FF") == 18
++	Q_ASSERT(objectPath.startsWith("/"));
+ 	m_adapter = m_objectPath.left(objectPath.size() - 18);
+ 	m_address = m_objectPath.right(17);
+ 
+-	kDebug() << k_funcinfo << " path: " << m_adapter << " address: " << m_address << endl;
++	kDebug() << k_funcinfo << " path: " << m_adapter << " address: " << m_address;
+ 
+ 	device = new QDBusInterface("org.bluez", m_adapter,
+ 				    "org.bluez.Adapter", QDBusConnection::systemBus());
+@@ -97,7 +98,7 @@
+ 
+ QString BluezBluetoothRemoteDevice::minorClass() const
+ {
+-	return stringReply("GetRemoteMajorClass");
++	return stringReply("GetRemoteMinorClass");
+ }
+ 
+ QStringList BluezBluetoothRemoteDevice::serviceClasses() const
+@@ -128,7 +129,7 @@
+ 
+ int BluezBluetoothRemoteDevice::pinCodeLength() const
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 
+ 	QDBusReply< int > path = device->call("PinCodeLength", m_address);
+ 	if (!path.isValid())
+@@ -139,7 +140,7 @@
+ 
+ int BluezBluetoothRemoteDevice::encryptionKeySize() const
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 
+ 	QDBusReply< int > path = device->call("EncryptionKeySize", m_address);
+ 	if (!path.isValid())
+@@ -159,37 +160,37 @@
+ 
+ void BluezBluetoothRemoteDevice::setAlias(const QString &alias)
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	device->call("SetRemoteAlias", m_address, alias);
+ }
+ 
+ void BluezBluetoothRemoteDevice::clearAlias()
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	device->call("ClearRemoteAlias", m_address);
+ }
+ 
+ void BluezBluetoothRemoteDevice::disconnect()
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	device->call("DisconnectRemoteDevice", m_address);
+ }
+ 
+ void BluezBluetoothRemoteDevice::cancelBondingProcess()
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	device->call("CancelBondingProcess", m_address);
+ }
+ 
+ void BluezBluetoothRemoteDevice::removeBonding()
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	device->call("RemoveBonding", m_address);
+ }
+ 
+ void BluezBluetoothRemoteDevice::serviceHandles(const QString &filter) const
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	QList<QVariant> args;
+ 	args << m_address << filter;
+ 	device->callWithCallback("GetRemoteServiceHandles",
+@@ -202,7 +203,7 @@
+ 
+ void BluezBluetoothRemoteDevice::serviceRecordAsXml(uint handle) const
+ {
+-	kDebug() << k_funcinfo << endl;
++	kDebug() << k_funcinfo;
+ 	QList<QVariant> args;
+ 	args << m_address << handle;
+ 	device->callWithCallback("GetRemoteServiceRecordAsXML",
+@@ -213,13 +214,13 @@
+ }
+ void BluezBluetoothRemoteDevice::slotServiceHandles(const QList< uint > & handles)
+ {
+-// 	kDebug() << k_funcinfo << endl;
++// 	kDebug() << k_funcinfo;
+ 	emit serviceHandlesAvailable(ubi(),handles);
+ }
+ 
+ void BluezBluetoothRemoteDevice::slotServiceRecordAsXml(const QString & record)
+ {
+-// 	kDebug() << k_funcinfo << endl;
++// 	kDebug() << k_funcinfo;
+ 	emit serviceRecordXmlAvailable(ubi(),record);
+ }
+ /******************************/
+@@ -253,14 +254,14 @@
+ 
+ void BluezBluetoothRemoteDevice::dbusErrorHandles(const QDBusError &error)
+ {
+-	kDebug() << "Error on dbus call for handles: " << error.message() << endl;
+-	emit serviceHandlesAvailable("failed",QList<uint>());
++	kDebug() << "Error on dbus call for handles: " << error.message();
++	emit serviceHandlesFailed(ubi());
+ }
+ 
+ void BluezBluetoothRemoteDevice::dbusErrorRecordAsXml(const QDBusError & error)
+ {
+-	kDebug() << "Error on dbus call for record as xml: " << error.message() << endl;
+-	emit serviceRecordXmlAvailable("failed","");
++	kDebug() << "Error on dbus call for record as xml: " << error.message();
++	emit serviceRecordXmlFailed(ubi());
+ }
+ 
+ #include "bluez-bluetoothremotedevice.moc"
+Index: bluez/bluez-bluetoothsecurity.h
+===================================================================
+--- bluez/bluez-bluetoothsecurity.h	(revisión: 0)
++++ bluez/bluez-bluetoothsecurity.h	(revisión: 702581)
+@@ -0,0 +1,59 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2007 Juan González <jaguilera@opsiland.info>
++
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++#ifndef BLUEZ_BLUETOOTH_SECURITY_H
++#define BLUEZ_BLUETOOTH_SECURITY_H
++
++#include <solid/control/ifaces/bluetoothsecurity.h>
++#include <solid/control/bluetoothsecurity.h>
++
++#include <QStringList>
++
++class KDE_EXPORT BluezBluetoothSecurity : public Solid::Control::Ifaces::BluetoothSecurity
++{
++    Q_OBJECT
++    Q_INTERFACES(Solid::Control::Ifaces::BluetoothSecurity)
++    public:
++        explicit BluezBluetoothSecurity(QObject *parent = 0);
++        BluezBluetoothSecurity(const QString &interface,QObject *parent = 0);
++        ~BluezBluetoothSecurity();
++
++        //No need to make this private as it's not exposed in the super.
++        //For the passkey agents
++        QString request(const QString & address, bool numeric);
++        bool confirm(const QString & address, const QString & value);
++        void display(const QString & address, const QString & value);
++        void keypress(const QString & address);
++        void complete(const QString & address);
++        void cancel(const QString & address);
++        //For the authorization agent
++        bool authorize(const QString &localUbi,const QString &remoteAddress,const QString& serviceUuid);
++        void cancel(const QString &localUbi,const QString &remoteAddress,const QString& serviceUuid);
++    public Q_SLOTS:
++        void addPasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void removePasskeyAgent(Solid::Control::BluetoothPasskeyAgent *agent);
++        void setAuthorizationAgent(Solid::Control::BluetoothAuthorizationAgent *agent);
++
++    private:
++        QList<Solid::Control::BluetoothPasskeyAgent *> agents;
++        Solid::Control::BluetoothAuthorizationAgent *authAgent;
++        QStringList devicesWithAgent;
++};
++
++#endif
+Index: bluez/tests/blueztest.cpp
+===================================================================
+--- bluez/tests/blueztest.cpp	(revisión: 694428)
++++ bluez/tests/blueztest.cpp	(revisión: 702581)
+@@ -12,10 +12,10 @@
+     QApplication app(argc, argv);
+     BluezBluetoothManager mgr(0, QStringList());
+ 
+-    kDebug() << "Interfaces: " << mgr.bluetoothInterfaces() << endl;
+-    kDebug() << "Default Interface: " << mgr.defaultInterface() << endl;
++    kDebug() << "Interfaces: " << mgr.bluetoothInterfaces();
++    kDebug() << "Default Interface: " << mgr.defaultInterface();
+ 
+-    kDebug() << "Bluetooth Input Devices: " << mgr.bluetoothInputDevices() << endl;
++    kDebug() << "Bluetooth Input Devices: " << mgr.bluetoothInputDevices();
+ 
+     BluezBluetoothInterface iface(mgr.defaultInterface());
+ 
+@@ -26,11 +26,11 @@
+ #if 0
+     BluezBluetoothRemoteDevice remote("/org/bluez/hci0/00:16:BC:15:A3:FF");
+ 
+-    kDebug() << "Name: " << remote.name() << endl;
+-    kDebug() << "Company: " << remote.company() << endl;
+-    kDebug() << "Services: " << remote.serviceClasses() << endl;
+-    kDebug() << "Major Class: " << remote.majorClass() << endl;
+-    kDebug() << "Minor Class: " << remote.minorClass() << endl;
++    kDebug() << "Name: " << remote.name();
++    kDebug() << "Company: " << remote.company();
++    kDebug() << "Services: " << remote.serviceClasses();
++    kDebug() << "Major Class: " << remote.majorClass();
++    kDebug() << "Minor Class: " << remote.minorClass();
+ 
+     if (remote.hasBonding()) {
+         remote.removeBonding();
+@@ -39,7 +39,7 @@
+     remote.createBonding();
+ 
+ 
+-    kDebug() << mgr.setupInputDevice("/org/bluez/hci0/00:04:61:81:75:FF") << endl;
++    kDebug() << mgr.setupInputDevice("/org/bluez/hci0/00:04:61:81:75:FF");
+ #endif
+ 
+     return app.exec();
+Index: bluez/bluez-bluetoothmanager.h
+===================================================================
+--- bluez/bluez-bluetoothmanager.h	(revisión: 694428)
++++ bluez/bluez-bluetoothmanager.h	(revisión: 702581)
+@@ -31,6 +31,7 @@
+ 
+ #include <solid/control/ifaces/bluetoothmanager.h>
+ 
++class BluezBluetoothSecurity;
+ class BluezBluetoothManagerPrivate;
+ class KDE_EXPORT BluezBluetoothManager : public Solid::Control::Ifaces::BluetoothManager
+ {
+@@ -46,7 +47,7 @@
+ 
+     QObject * createBluetoothInputDevice(const QString &);
+     KJob *setupInputDevice(const QString &);
+-
++    Solid::Control::Ifaces::BluetoothSecurity* security(const QString &interface);
+ public Q_SLOTS:
+     void removeInputDevice(const QString &);
+ 
+Index: bluez/bluez-bluetoothremotedevice.h
+===================================================================
+--- bluez/bluez-bluetoothremotedevice.h	(revisión: 694428)
++++ bluez/bluez-bluetoothremotedevice.h	(revisión: 702581)
+@@ -80,7 +80,9 @@
+     void bondingCreated();
+     void bondingRemoved();
+     void serviceRecordXmlAvailable(const QString &ubi, const QString &record);
++    void serviceRecordXmlFailed(const QString &ubi);
+     void serviceHandlesAvailable(const QString &ubi, const QList<uint> &handles);
++    void serviceHandlesFailed(const QString &ubi);
+ 
+ private:
+     QString m_objectPath;
+Index: bluez/bluez-bluetoothsecurityadaptor.cpp
+===================================================================
+--- bluez/bluez-bluetoothsecurityadaptor.cpp	(revisión: 0)
++++ bluez/bluez-bluetoothsecurityadaptor.cpp	(revisión: 702581)
+@@ -0,0 +1,163 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2006 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González Aguilera <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++#include "bluez-bluetoothsecurityadaptor.h"
++#include <kdebug.h>
++#include <ctime>
++
++BluezBluetoothSecurityAdaptor::BluezBluetoothSecurityAdaptor(BluezBluetoothSecurity * security)
++    :QDBusAbstractAdaptor(security),security(security),conn(QDBusConnection::systemBus())
++{
++    serviceName = QString("/org/kde/solid/BluezBluetoothSecurityAdaptor%1").arg(time(NULL));
++    bool done = conn.registerObject(
++            serviceName,security,QDBusConnection::ExportAdaptors);
++    if(!done)
++    {
++        kDebug() << "Failed to register the object: " << conn.lastError().name() << " : " << conn.lastError().message();
++        serviceName = "";
++    }
++    else
++    {
++        kDebug() << "DBus service registered at "<< serviceName <<endl;
++                //TODO Add support for an specific local device
++        QDBusInterface iface("org.bluez", "/org/bluez","org.bluez.Security",conn, this);
++        iface.call("RegisterDefaultPasskeyAgent",serviceName);
++        if(iface.lastError().isValid())
++        {
++            kDebug() << "RegisterDefaultPasskeyAgent failed :" << iface.lastError().name() << " : " << iface.lastError().message();
++            serviceName = "";
++        }
++        else
++            kDebug() << "RegisterDefaultPasskeyAgent succesfull!";
++    }
++
++}
++
++BluezBluetoothSecurityAdaptor::~ BluezBluetoothSecurityAdaptor()
++{
++    kDebug() << k_funcinfo;
++    if(!serviceName.isEmpty())
++    {
++        QDBusInterface iface("org.bluez", "/org/bluez","org.bluez.Security",conn, this);
++        iface.call("UnregisterDefaultPasskeyAgent",serviceName);
++        if(iface.lastError().isValid())
++        {
++            kDebug() << "UnregisterDefaultPasskeyAgent failed :" << iface.lastError().name() << " : " << iface.lastError().message();
++            serviceName = "";
++        } else 
++            kDebug() << "UnregisterDefaultPasskeyAgent Successfull!:" << iface.lastError().name() << " : " << iface.lastError().message();
++    }
++}
++
++QString BluezBluetoothSecurityAdaptor::Request(const QString & path, const QString & address, bool numeric,const QDBusMessage &msg)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++    {
++        QString answer = security->request(address,numeric);
++        if(!answer.isEmpty())
++            return answer;
++        else
++        {
++            QDBusMessage error = msg.createErrorReply("org.bluez.Error.Rejected","Pairing request rejected");
++            QDBusConnection::systemBus().send(error);
++        }
++    }
++    return "";//To satisfy the compiler
++}
++
++void BluezBluetoothSecurityAdaptor::Confirm(const QString & path, const QString & address, const QString & value,const QDBusMessage &msg)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++    {
++        if(security->confirm(address,value))
++            kDebug() << "Confirmed pin for " << address;
++        else
++        {
++            QDBusMessage error = msg.createErrorReply("org.bluez.Error.Rejected","Pairing request rejected");
++            QDBusConnection::systemBus().send(error);
++        }
++    }
++}
++
++void BluezBluetoothSecurityAdaptor::Display(const QString & path, const QString & address, const QString & value)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++        security->display(address,value);
++}
++
++void BluezBluetoothSecurityAdaptor::Keypress(const QString & path, const QString & address)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++        security->keypress(address);
++}
++
++void BluezBluetoothSecurityAdaptor::Complete(const QString & path, const QString & address)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++        security->complete(address);
++}
++
++void BluezBluetoothSecurityAdaptor::Cancel(const QString & path, const QString & address)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(path)
++    if(security)
++        security->cancel(address);
++}
++
++void BluezBluetoothSecurityAdaptor::Release()
++{
++    kDebug() << k_funcinfo;
++}
++
++void BluezBluetoothSecurityAdaptor::Authorize(const QString & adapter_path, const QString & address, const QString & service_path, const QString & uuid,const QDBusMessage &msg)
++{
++    kDebug() << k_funcinfo;
++    Q_UNUSED(service_path)
++    if(security)
++    {
++        if(security->authorize(adapter_path,address,uuid))
++            kDebug() << "Service with uuid "<< uuid <<" for " << address << " authorized";
++        else
++        {
++            QDBusMessage error = msg.createErrorReply("org.bluez.Error.Rejected","Authorization request rejected");
++            QDBusConnection::systemBus().send(error);
++        }
++    }
++}
++
++void BluezBluetoothSecurityAdaptor::Cancel(const QString & adapter_path, const QString & address, const QString & service_path, const QString & uuid)
++{
++    Q_UNUSED(service_path)
++    if(security)
++            security->cancel(adapter_path,address,uuid);
++}
++
++#include "bluez-bluetoothsecurityadaptor.moc"
+Index: bluez/bluez-bluetoothsecurityadaptor.h
+===================================================================
+--- bluez/bluez-bluetoothsecurityadaptor.h	(revisión: 0)
++++ bluez/bluez-bluetoothsecurityadaptor.h	(revisión: 702581)
+@@ -0,0 +1,60 @@
++/*  This file is part of the KDE project
++    Copyright (C) 2006 Will Stephenson <wstephenson@kde.org>
++    Copyright (C) 2007 Daniel Gollub <dgollub@suse.de>
++    Copyright (C) 2007 Juan González Aguilera <jaguilera@opsiland.info>
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License version 2 as published by the Free Software Foundation.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++
++*/
++#ifndef __BLUEZ_SECURITY_ADAPTOR
++#define __BLUEZ_SECURITY_ADAPTOR
++
++#include "bluez-bluetoothsecurity.h"
++
++#include <QtDBus>
++
++class BluezBluetoothSecurityAdaptor: public QDBusAbstractAdaptor
++{
++    Q_OBJECT
++    Q_CLASSINFO("D-Bus Interface","org.bluez.PasskeyAgent")
++    Q_CLASSINFO("D-Bus Interface","org.bluez.AuthorizationAgent")
++    public:
++        BluezBluetoothSecurityAdaptor(BluezBluetoothSecurity *security);
++        ~BluezBluetoothSecurityAdaptor();
++    public Q_SLOTS:
++        //org.bluez.PasskeyAgent
++        QString Request(const QString & path, const QString & address, bool numeric,const QDBusMessage &msg);
++        void Confirm(const QString & path, const QString & address, const QString & value,const QDBusMessage &msg);
++        void Display(const QString & path, const QString & address, const QString & value);
++        void Keypress(const QString & path, const QString & address);
++        void Complete(const QString & path, const QString & address);
++        void Cancel(const QString & path, const QString & address);
++
++        
++        //org.bluez.AuthorizationAgent
++        void Authorize(const QString & adapter_path, const QString & address,
++                       const QString & service_path, const QString & uuid,const QDBusMessage &msg);
++        void Cancel(const QString & adapter_path, const QString & address,
++                            const QString & service_path, const QString & uuid);
++        //common
++        void Release();
++    private:
++        QString serviceName;
++        BluezBluetoothSecurity *security;
++        QDBusInterface *manager;
++        QDBusConnection conn;
++};
++#endif
++
+Index: bluez/CMakeLists.txt
+===================================================================
+--- bluez/CMakeLists.txt	(revisión: 694428)
++++ bluez/CMakeLists.txt	(revisión: 702581)
+@@ -8,6 +8,8 @@
+ 	bluez-bluetoothinterface.cpp
+ 	bluez-bluetoothinputdevice.cpp
+ 	bluez-bluetoothremotedevice.cpp
++	bluez-bluetoothsecurity.cpp
++	bluez-bluetoothsecurityadaptor.cpp
+ )
+ 
+ 

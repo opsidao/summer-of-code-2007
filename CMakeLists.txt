@@ -1,0 +1,17 @@
+PROJECT(kdebluetooth)
+
+#Finds KDE4 libraries, include them and set includes
+FIND_PACKAGE(KDE4 REQUIRED)
+INCLUDE(KDE4Defaults)
+ADD_DEFINITIONS(${KDE_DEFINITIONS})
+INCLUDE_DIRECTORIES(${KDE4_INCLUDES})
+
+#Comment to make CMake less verbose
+SET(CMAKE_VERBOSE_MAKEFILE ON)
+
+ADD_SUBDIRECTORY(plasma)
+# ADD_SUBDIRECTORY(kioslave)
+ADD_SUBDIRECTORY(kbluemon)
+ADD_SUBDIRECTORY(btpm)
+# ADD_SUBDIRECTORY(chooser)
+

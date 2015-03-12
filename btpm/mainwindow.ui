@@ -1,0 +1,93 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>884</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>BlueTooth Presence Manager</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <item row="0" column="0" >
+     <widget class="QSplitter" name="splitter_2" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QDockWidget" name="remotesDockWidget" >
+       <property name="features" >
+        <set>QDockWidget::DockWidgetMovable</set>
+       </property>
+       <property name="windowTitle" >
+        <string>Remote devices</string>
+       </property>
+       <widget class="QWidget" name="dockWidgetContents" >
+        <layout class="QGridLayout" />
+       </widget>
+      </widget>
+      <widget class="QSplitter" name="splitter" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QDockWidget" name="availableActionsDockWidget" >
+        <property name="features" >
+         <set>QDockWidget::DockWidgetMovable</set>
+        </property>
+        <property name="windowTitle" >
+         <string>Available actions</string>
+        </property>
+        <widget class="QWidget" name="dockWidgetContents_3" >
+         <layout class="QGridLayout" />
+        </widget>
+       </widget>
+       <widget class="QDockWidget" name="assignedActionsDockWidget" >
+        <property name="features" >
+         <set>QDockWidget::DockWidgetMovable</set>
+        </property>
+        <property name="windowTitle" >
+         <string>Assigend actions</string>
+        </property>
+        <widget class="QWidget" name="dockWidgetContents_2" >
+         <layout class="QGridLayout" />
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>884</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOptions" >
+    <property name="title" >
+     <string>Options</string>
+    </property>
+    <addaction name="actionOnly_show_active_devices" />
+   </widget>
+   <addaction name="menuOptions" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="actionOnly_show_active_devices" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Only show active devices</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,43 @@
+8
+
+dir
+702581
+svn+ssh://jaguilera@svn.kde.org/home/kde/branches/work/soc_kdebluetooth4/kioslave
+svn+ssh://jaguilera@svn.kde.org/home/kde
+
+
+
+2007-07-02T23:13:09.766894Z
+682516
+jaguilera
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+283d02a7-25f6-0310-bc7c-ecb5cbfe19da
+
+bluetooth
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2007-08-20T21:34:15.000000Z
+e8d2984f0bc7630f36a3d2c02c7a8772
+2007-06-14T18:24:32.140329Z
+675690
+jaguilera
+

@@ -1,0 +1,29 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kbluemon
+Icon=kdebluetooth
+Type=Application
+Name=kbluemon
+Name[xx]=xxkbluemonxx
+GenericName=Bluetooth Monitor
+GenericName[es]=Monitor de bluetooth
+GenericName[it]=Monitor Bluetooth
+GenericName[ja]=Bluetooth モニタ
+GenericName[nl]=Bluetooth-monitor
+GenericName[pt]=Monitor de Bluetooth
+GenericName[pt_BR]=Monitor de Bluetooth
+GenericName[sv]=Blåtandsövervakare
+GenericName[tr]=Bluetooth İzleyici
+GenericName[xx]=xxBluetooth Monitorxx
+Categories=Qt;KDE;System;Monitor;
+Comment=KDE Bluetooth Monitor
+Comment[es]=Monitor de bluetooth para KDE
+Comment[it]=Monitor Bluetooth di KDE
+Comment[ja]=KDE Bluetooth モニタ
+Comment[nl]=KDE Bluetooth-monitor
+Comment[pt]=Monitor de Bluetooth do KDE
+Comment[pt_BR]=Monitor de Bluetooth do KDE
+Comment[sv]=KDE:s blåtandsövervakare
+Comment[tr]=KDE Bluetooth İzleyici
+Comment[xx]=xxKDE Bluetooth Monitorxx
+
